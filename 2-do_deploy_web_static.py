@@ -2,7 +2,7 @@
 """     Fabric script (based on the file 1-pack_web_static.py)
         that distributes an archive to your web servers,
         using the function do_deploy"""
-from fabric.api import run, put, env
+from fabric.api import run, put, env, runs_once
 from datetime import datetime
 import os
 
@@ -12,6 +12,7 @@ env.user = 'ubuntu'
 env.key_filename = '~/.ssh/id_rsa'
 
 
+@runs_once
 def do_deploy(archive_path):
     """Deploys the static files to the host servers.
     Args:
