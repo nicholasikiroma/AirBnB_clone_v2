@@ -8,8 +8,6 @@ import os
 
 
 env.hosts = ['18.204.15.114', '52.90.22.244']
-env.user = 'ubuntu'
-env.key_filename = '~/.ssh/id_rsa'
 
 
 @runs_once
