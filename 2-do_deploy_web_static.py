@@ -4,7 +4,7 @@
         using the function do_deploy"""
 from fabric.api import run, put, env
 from datetime import datetime
-from os import path
+import os
 
 
 env.hosts = ['18.204.15.114', '52.90.22.244']
@@ -13,41 +13,27 @@ env.key_filename = '~/.ssh/id_rsa'
 
 
 def do_deploy(archive_path):
-    """Deploys an archive to web servers"""
-    try:
-        if not (path.exists(archive_path)):
-            return False
-
-        # upload archive
-        put(archive_path, '/tmp/')
-
-        timestamp = archive_path[-18:-4]
-        run('sudo mkdir -p /data/web_static/\
-releases/web_static_{}/'.format(timestamp))
-
-        # uncompress archive and delete .tgz
-        run('sudo tar -xzf /tmp/web_static_{}.tgz -C \
-/data/web_static/releases/web_static_{}/'
-            .format(timestamp, timestamp))
-
-        run('sudo rm /tmp/web_static_{}.tgz'.format(timestamp))
-
-        # move contents into host web_static
-        run('sudo mv /data/web_static/releases/web_static_{}/web_static/* \
-/data/web_static/releases/web_static_{}/'.format(timestamp, timestamp))
-
-        run('sudo rm -rf /data/web_static/releases/\
-web_static_{}/web_static'
-            .format(timestamp))
-
-        # delete pre-existing sym link
-        run('sudo rm -rf /data/web_static/current')
-
-        # re-establish sym link
-        run('sudo ln -s /data/web_static/releases/\
-web_static_{}/ /data/web_static/current'.format(timestamp))
-    except Exception:
+    """Deploys the static files to the host servers.
+    Args:
+        archive_path (str): The path to the archived static files.
+    """
+    if not os.path.exists(archive_path):
         return False
-
-        # True on success
-        return True
+    file_name = os.path.basename(archive_path)
+    dir_name = file_name.replace(".tgz", "")
+    dir_path = "/data/web_static/releases/{}/".format(dir_name)
+    status = False
+    try:
+        put(archive_path, "/tmp/{}".format(file_name))
+        run("mkdir -p {}".format(dir_path))
+        run("tar -xzf /tmp/{} -C {}".format(file_name, dir_path))
+        run("rm -rf /tmp/{}".format(file_name))
+        run("mv {}web_static/* {}".format(dir_path, dir_path))
+        run("rm -rf {}web_static".format(dir_path))
+        run("rm -rf /data/web_static/current")
+        run("ln -s {} /data/web_static/current".format(dir_path))
+        print('New version Deployed Successfully!')
+        status = True
+    except Exception:
+        status = False
+    return status
