@@ -13,5 +13,18 @@ def hello():
     return "Hello HBNB!"
 
 
+@app.route('/hbnb')
+def hello_hbnb():
+    """Displays strict with specified route"""
+    return "HBNB"
+
+
+@app.route('/c/<text>')
+def hello_c(text):
+    """Display 'C' to the screen"""
+    text = text.replace("_", " ")
+    return "C %s" % text
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
