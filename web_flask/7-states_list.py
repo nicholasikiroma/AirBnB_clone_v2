@@ -12,11 +12,13 @@ app.url_map.strict_slashes = False
 
 @app.teardown_appcontext
 def close_context(exception):
+    """Handles clean up"""
     storage.close()
 
 
 @app.route('/states_list')
 def state_route():
+    """lists all states"""
     states = storage.all(State)
     all_states = []
 
