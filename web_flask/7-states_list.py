@@ -19,12 +19,8 @@ def close_context(exception):
 @app.route('/states_list')
 def state_route():
     """lists all states"""
-    states = storage.all(State)
-    all_states = []
-
-    for state in states.values():
-        all_states.append([state.id, state.name])
-    return render_template('7-states_list.html', states=all_states)
+    return render_template('7-states_list.html',
+                            states=storage.all(state))
 
 
 if __name__ == "__main__":
