@@ -28,7 +28,7 @@ def hello_c(text):
 
 @app.route('/python')
 @app.route('/python/<text>')
-def python_route(text):
+def python_route(text='is cool'):
     """Displays Python followed by route"""
     text = text.replace("_", " ")
     return "Python %s" % text
