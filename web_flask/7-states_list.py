@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 """states_list: display a HTML page: (inside the tag BODY)"""
 from models import storage
 from models.state import State
